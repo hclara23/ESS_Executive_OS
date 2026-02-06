@@ -1,65 +1,132 @@
-import Image from "next/image";
+import { AppShell } from "@/components/app-shell";
+import { RunNowButton } from "@/components/run-now-button";
+import { SectionHeader } from "@/components/section-header";
+import { StatCard } from "@/components/stat-card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { mockApprovals, mockBriefing, mockTasks } from "@/lib/mock-data";
+import { getApprovals, getMorningBriefing, getTasks } from "@/lib/data";
+import { LiveApprovals, type LiveApprovalSeed } from "@/components/live-approvals";
+import { LiveTasks, type LiveTaskSeed } from "@/components/live-tasks";
+import { LiveBriefing } from "@/components/live-briefing";
 
-export default function Home() {
+export default async function HomePage() {
+  const [approvals, tasks, briefing] = await Promise.all([
+    getApprovals(),
+    getTasks(),
+    getMorningBriefing(),
+  ]);
+  const approvalsView = approvals.length ? approvals : mockApprovals;
+  const tasksView = tasks.length ? tasks : mockTasks;
+  const briefingView =
+    briefing?.content && typeof briefing.content === "object"
+      ? (briefing.content as typeof mockBriefing)
+      : mockBriefing;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <AppShell
+      title="Command Center"
+      description="A calm, high-fidelity overview of ESS executive operations. Switch personas, triage approvals, and review system planning in one place."
+      actions={<RunNowButton />}
+    >
+      <div className="grid gap-4 md:grid-cols-3">
+        <StatCard
+          label="Active Approvals"
+          value={`${approvalsView.length}`}
+          trend="Owner/admin approval required"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+        <StatCard
+          label="Tasks Due (48h)"
+          value={`${tasksView.length}`}
+          trend="Prioritized by due date"
+        />
+        <StatCard
+          label="Unread Briefings"
+          value={briefing ? "1" : "0"}
+          trend="Latest generated within 24h"
+        />
+      </div>
+
+      <Card className="glass-panel p-6">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <SectionHeader
+              title="Morning Brief"
+              description="Auto-summarized priorities and opportunities for today."
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="secondary">Work</Badge>
+            <Badge variant="outline">Org Shared</Badge>
+          </div>
         </div>
-      </main>
-    </div>
+        <LiveBriefing
+          initialBriefing={briefing}
+          render={(content) => {
+            const schedule = content.schedule ?? briefingView.schedule;
+            const priorities = content.priorities ?? briefingView.priorities;
+            const opportunities = content.opportunities ?? briefingView.opportunities;
+            return (
+              <div className="mt-6 grid gap-6 lg:grid-cols-3">
+                <div className="glass-card p-5">
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                    Schedule
+                  </div>
+                  <ul className="mt-4 space-y-3 text-sm">
+                    {schedule.map((item) => (
+                      <li key={item.time} className="flex items-center justify-between">
+                        <span className="font-medium">{item.title}</span>
+                        <span className="text-muted-foreground">{item.time}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="glass-card p-5">
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                    Top Priorities
+                  </div>
+                  <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
+                    {priorities.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="glass-card p-5">
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                    Opportunities
+                  </div>
+                  <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
+                    {opportunities.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          }}
+        />
+      </Card>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card className="glass-panel p-6">
+          <SectionHeader
+            title="Approvals Queue"
+            description="Actions awaiting human confirmation."
+            action={<Button className="rounded-full">Review All</Button>}
+          />
+          <LiveApprovals initialApprovals={approvalsView as LiveApprovalSeed[]} />
+        </Card>
+
+        <Card className="glass-panel p-6">
+          <SectionHeader
+            title="Critical Tasks"
+            description="High impact tasks across both personas."
+            action={<Button variant="secondary" className="rounded-full">Open Tasks</Button>}
+          />
+          <LiveTasks initialTasks={tasksView as LiveTaskSeed[]} />
+        </Card>
+      </div>
+    </AppShell>
   );
 }

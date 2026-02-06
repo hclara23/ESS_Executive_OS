@@ -1,26 +1,183 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-system);
+  --font-mono: var(--font-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0.9rem;
+  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+
+  --background: oklch(0.995 0.003 95);
+  --foreground: oklch(0.13 0.01 260);
+  --card: oklch(0.99 0.004 95);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.995 0.003 95);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.2 0.02 260);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.95 0.01 95);
+  --secondary-foreground: oklch(0.2 0.02 260);
+  --muted: oklch(0.96 0.008 95);
+  --muted-foreground: oklch(0.45 0.01 260);
+  --accent: oklch(0.93 0.012 250);
+  --accent-foreground: oklch(0.2 0.02 260);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.88 0.02 250 / 45%);
+  --input: oklch(0.92 0.02 250 / 55%);
+  --ring: oklch(0.7 0.02 250 / 55%);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+
+  --sidebar: oklch(0.985 0.004 95 / 75%);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: oklch(0.2 0.02 260);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.93 0.012 250);
+  --sidebar-accent-foreground: oklch(0.2 0.02 260);
+  --sidebar-border: oklch(0.85 0.02 250 / 45%);
+  --sidebar-ring: oklch(0.7 0.02 250 / 55%);
+
+  --surface: oklch(0.98 0.004 95 / 70%);
+  --glass: oklch(1 0 0 / 60%);
+  --shadow-soft: 0 12px 40px oklch(0.2 0.05 260 / 8%);
+  --shadow-crisp: 0 1px 0 oklch(0.2 0.05 260 / 8%), 0 0 0 1px
+    oklch(0.8 0.03 250 / 25%);
+}
+
+.dark {
+  --background: oklch(0.16 0.02 260);
+  --foreground: oklch(0.96 0.01 95);
+  --card: oklch(0.2 0.02 260 / 75%);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.2 0.02 260 / 80%);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.96 0.01 95);
+  --primary-foreground: oklch(0.2 0.02 260);
+  --secondary: oklch(0.26 0.02 260);
+  --secondary-foreground: oklch(0.96 0.01 95);
+  --muted: oklch(0.26 0.02 260);
+  --muted-foreground: oklch(0.7 0.02 260);
+  --accent: oklch(0.35 0.02 260);
+  --accent-foreground: oklch(0.96 0.01 95);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.7 0.02 260 / 55%);
+
+  --sidebar: oklch(0.2 0.02 260 / 85%);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: oklch(0.96 0.01 95);
+  --sidebar-primary-foreground: oklch(0.2 0.02 260);
+  --sidebar-accent: oklch(0.3 0.02 260);
+  --sidebar-accent-foreground: oklch(0.96 0.01 95);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.7 0.02 260 / 55%);
+
+  --surface: oklch(0.2 0.02 260 / 60%);
+  --glass: oklch(0.2 0.02 260 / 55%);
+  --shadow-soft: 0 18px 46px oklch(0 0 0 / 35%);
+  --shadow-crisp: 0 1px 0 oklch(1 0 0 / 8%), 0 0 0 1px oklch(1 0 0 / 10%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/40;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-system);
+    background-image: radial-gradient(
+        1200px circle at 20% -10%,
+        oklch(0.94 0.02 250 / 40%),
+        transparent 60%
+      ),
+      radial-gradient(1400px circle at 110% 10%, oklch(0.98 0.01 95 / 60%), transparent 55%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    background: oklch(0.2 0.02 260);
+    color: oklch(0.98 0.005 95);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .glass-panel {
+    background: var(--glass);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(24px);
+    border-radius: var(--radius-3xl);
+    border: 1px solid var(--border);
+  }
+
+  .glass-card {
+    background: var(--surface);
+    box-shadow: var(--shadow-crisp);
+    backdrop-filter: blur(18px);
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--border);
+  }
+
+  .hairline {
+    border: 1px solid var(--border);
+  }
+
+  .subtle-grid {
+    background-image: linear-gradient(
+        to right,
+        oklch(0.9 0.02 250 / 20%) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, oklch(0.9 0.02 250 / 20%) 1px, transparent 1px);
+    background-size: 56px 56px;
+    background-position: center;
+  }
 }
