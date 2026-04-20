@@ -1,0 +1,144 @@
+{
+  "name": "ESS Content Generation Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "cronExpression": "0 */6 * * *"
+      },
+      "name": "Schedule - Keyword Discovery",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/api/intelligence/discover",
+        "options": {
+          "qs": {
+            "keywords": "vfd wastewater,scada monitoring,plc programming,industrial automation"
+          }
+        }
+      },
+      "name": "Discover Opportunities",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/api/opportunities/score",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "keyword",
+              "value": "={{$json.keyword}}"
+            }
+          ]
+        }
+      },
+      "name": "Score Opportunity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.weighted_total}}",
+              "operation": "largerEqual",
+              "value2": 75
+            }
+          ]
+        }
+      },
+      "name": "Score >= 75?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/api/content/generate",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "keyword",
+              "value": "={{$json.keyword}}"
+            },
+            {
+              "name": "content_type",
+              "value": "={{$json.content_type}}"
+            }
+          ]
+        }
+      },
+      "name": "Generate Content",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/api/content/validate",
+        "sendBody": true
+      },
+      "name": "Validate Content",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/api/wordpress/publish",
+        "sendBody": true
+      },
+      "name": "Publish to WordPress",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1450, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/api/content/translate",
+        "sendBody": true
+      },
+      "name": "Translate to Spanish",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1650, 200]
+    }
+  ],
+  "connections": {
+    "Schedule - Keyword Discovery": {
+      "main": [[{"node": "Discover Opportunities", "type": "main", "index": 0}]]
+    },
+    "Discover Opportunities": {
+      "main": [[{"node": "Score Opportunity", "type": "main", "index": 0}]]
+    },
+    "Score Opportunity": {
+      "main": [[{"node": "Score >= 75?", "type": "main", "index": 0}]]
+    },
+    "Score >= 75?": {
+      "main": [[{"node": "Generate Content", "type": "main", "index": 0}]]
+    },
+    "Generate Content": {
+      "main": [[{"node": "Validate Content", "type": "main", "index": 0}]]
+    },
+    "Validate Content": {
+      "main": [[{"node": "Publish to WordPress", "type": "main", "index": 0}]]
+    },
+    "Publish to WordPress": {
+      "main": [[{"node": "Translate to Spanish", "type": "main", "index": 0}]]
+    }
+  }
+}

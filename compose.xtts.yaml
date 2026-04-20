@@ -1,0 +1,28 @@
+services:
+  api:
+    environment:
+      ELIO_TTS_PROVIDER: remote
+      ELIO_REMOTE_TTS_URL: ${ELIO_REMOTE_TTS_URL:-http://xtts:8020/synthesize}
+      ELIO_TTS_LANG: ${ELIO_TTS_LANG:-en}
+    depends_on:
+      - xtts
+
+  xtts:
+    build:
+      context: .
+      dockerfile: docker/xtts.Dockerfile
+    environment:
+      ELIO_XTTS_MODEL: ${ELIO_XTTS_MODEL:-tts_models/multilingual/multi-dataset/xtts_v2}
+      ELIO_XTTS_USE_GPU: ${ELIO_XTTS_USE_GPU:-false}
+      ELIO_XTTS_SPEAKER_DIR: /voices
+      ELIO_XTTS_SPLIT_SENTENCES: ${ELIO_XTTS_SPLIT_SENTENCES:-true}
+      COQUI_TOS_AGREED: "1"
+    ports:
+      - "${ELIO_XTTS_BIND_IP:-127.0.0.1}:${ELIO_XTTS_PORT:-8020}:8020"
+    networks:
+      elio_core:
+        aliases:
+          - xtts
+    volumes:
+      - ./voices/xtts:/voices:ro
+    restart: unless-stopped

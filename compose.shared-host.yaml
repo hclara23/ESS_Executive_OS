@@ -1,0 +1,46 @@
+services:
+  api:
+    init: true
+    cpus: "${ELIO_API_CPUS:-2.0}"
+    mem_limit: "${ELIO_API_MEM_LIMIT:-4g}"
+    pids_limit: 256
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    ports: !override
+      - "127.0.0.1:${ELIO_API_PORT:-8000}:8000"
+    networks:
+      - elio_core
+      - platform_edge
+
+  subagent:
+    init: true
+    cpus: "${ELIO_SUBAGENT_CPUS:-1.5}"
+    mem_limit: "${ELIO_SUBAGENT_MEM_LIMIT:-2g}"
+    pids_limit: 192
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - elio_core
+
+  ollama:
+    cpus: "${ELIO_OLLAMA_CPUS:-6.0}"
+    mem_limit: "${ELIO_OLLAMA_MEM_LIMIT:-12g}"
+    pids_limit: 512
+    networks:
+      - elio_core
+
+  postgres:
+    cpus: "${ELIO_POSTGRES_CPUS:-1.5}"
+    mem_limit: "${ELIO_POSTGRES_MEM_LIMIT:-2g}"
+    pids_limit: 256
+    networks:
+      - elio_core
+
+networks:
+  platform_edge:
+    external: true
+    name: ${EDGE_NETWORK:-platform_edge}

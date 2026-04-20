@@ -1,0 +1,20 @@
+# API runtime
+fastapi>=0.115.0
+uvicorn>=0.27.0
+pydantic>=2.0.0
+psycopg2-binary>=2.9.9
+python-dotenv==1.0.0
+openai>=1.0.0
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+cryptography>=46.0.0
+kokoro-onnx==0.3.4
+soundfile==0.12.1
+google-cloud-storage
+pypdf
+python-multipart
+PyJWT
+intuit-oauth
+requests
+fpdf2

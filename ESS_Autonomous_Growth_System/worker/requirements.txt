@@ -1,0 +1,11 @@
+fastapi==0.115.6
+pydantic-settings==2.7.1
+httpx==0.28.1
+redis==5.2.1
+asyncpg==0.30.0
+sqlalchemy==2.0.36
+openai==1.59.3
+anthropic==0.42.0
+python-dotenv==1.0.1
+diff-match-patch==20241021
+apscheduler==3.10.4

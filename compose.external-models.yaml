@@ -1,0 +1,16 @@
+services:
+  api:
+    depends_on: !override
+      postgres:
+        condition: service_healthy
+      subagent:
+        condition: service_healthy
+
+  subagent:
+    depends_on: !override {}
+    environment:
+      ELIO_LOCAL_BASE_URL: ${ELIO_LOCAL_BASE_URL}
+
+  ollama:
+    profiles:
+      - local-models

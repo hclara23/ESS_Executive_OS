@@ -1,0 +1,21 @@
+.venv
+__pycache__
+BackupDB
+Api.txt
+email_pwd.txt
+email_sender.txt
+user_pwd.txt
+verified_users.txt
+contacts.txt
+NemoVA.Nemo_DB.json
+*.code-workspace
+# Local environment files
+/.env
+/.env.*
+!.env.example
+Data/integrations.json
+Data/postgres_config.json
+Data/firebase_config.json
+voices/xtts/*
+!voices/xtts/.gitkeep
+!voices/README.md
