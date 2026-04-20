@@ -1,5 +1,11 @@
 # ELIO Status
 
+## Repository & Hosting
+
+- **Git:** [hclara23/ESS_Executive_OS](https://github.com/hclara23/ESS_Executive_OS)
+- **Frontend:** [elioos.web.app](https://elioos.web.app) — Firebase project `elioos` (ElioOS)
+- **Deploy frontend:** `firebase deploy --only hosting --project elioos`
+
 ## Current Version
 
 `4.0.0` | Unified Communications Edition

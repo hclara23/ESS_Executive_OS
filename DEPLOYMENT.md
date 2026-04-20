@@ -149,11 +149,13 @@ If the server has a supported GPU, set `ELIO_XTTS_USE_GPU=true`. Otherwise leave
 
 ## 4. Hosted Frontend
 
-The frontend can still be hosted separately. If you do that:
+The frontend is currently deployed to Firebase Hosting, project `elioos`:
 
-- set `ELIO_ALLOWED_ORIGINS` to the frontend origin
-- point the frontend at the API only
-- keep `subagent`, `ollama`, and `postgres` private
+- **Live URL:** [elioos.web.app](https://elioos.web.app)
+- **Deploy:** `firebase deploy --only hosting --project elioos`
+- **Target domain (post-cutover):** [app.electricsupplysource.co](https://app.electricsupplysource.co)
+
+If hosting separately, set `ELIO_ALLOWED_ORIGINS` to the frontend origin, point the frontend at the API only, and keep `subagent`, `ollama`, and `postgres` private.
 
 ## 5. Cloud Run
 

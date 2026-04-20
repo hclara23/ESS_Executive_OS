@@ -2,6 +2,12 @@
 
 Elio is a private assistant stack for Alex and Sandra. The app now runs as a local-first system: the main API stays in control, a private subagent handles cheaper background reasoning, Ollama serves local models, and Kokoro provides on-box speech.
 
+## Repository & Hosting
+
+- **Git repository:** [hclara23/ESS_Executive_OS](https://github.com/hclara23/ESS_Executive_OS)
+- **Frontend (Firebase):** [elioos.web.app](https://elioos.web.app) — Firebase project `elioos` (ElioOS)
+- **Target app domain:** [app.electricsupplysource.co](https://app.electricsupplysource.co) (DNS/TLS cutover pending)
+
 ## What Changed
 
 - **Unified Message Center Dashboard:** A new premium PWA view for managing multi-account emails with integrated AI Triage.
