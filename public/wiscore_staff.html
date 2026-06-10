@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WisCore Staff Login</title>
+  <link rel="stylesheet" href="wiscore.css">
+  <script defer src="wiscore.js"></script>
+  <style>
+    .login-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999}
+    .login-box{background:#0f1720;color:#fff;padding:2rem;border-radius:8px;min-width:320px}
+    .login-box input{width:100%;padding:0.6rem;margin:0.5rem 0;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit}
+    .primary-btn{background:#ef4444;color:white;border:none;padding:0.6rem 1rem;border-radius:6px;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div id="login-overlay" class="login-overlay">
+    <div class="login-box">
+      <h2>WisCore Staff Login</h2>
+      <form id="wiscoreLoginForm">
+        <input id="loginUsername" placeholder="Username" required />
+        <input id="loginPassword" type="password" placeholder="Password" required />
+        <div style="margin-top:1rem;display:flex;gap:0.5rem;justify-content:flex-end;">
+          <button type="submit" class="primary-btn">Login</button>
+        </div>
+        <div id="loginError" style="color:#f87171;margin-top:0.5rem;display:none"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Reuse the public WisCore UI for staff after login -->
+  <iframe id="staffFrame" src="/wiscore.html" style="width:100%;height:100vh;border:0;display:none"></iframe>
+
+  <script>
+    document.getElementById('wiscoreLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const u = document.getElementById('loginUsername').value.trim();
+      const p = document.getElementById('loginPassword').value.trim();
+      const err = document.getElementById('loginError'); err.style.display='none';
+      try {
+        const res = await fetch((location.origin.replace(/:\/\/$/, '') || '') + '/login', {
+          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({username: u, password: p, client: 'wiscore'})
+        });
+        const data = await res.json();
+        if (res.ok && data.ok && data.token) {
+          // Store WisCore-scoped token to keep sessions separate from Elio
+          localStorage.setItem('wiscoreUser', data.username);
+          localStorage.setItem('wiscoreToken', data.token);
+          document.getElementById('login-overlay').style.display = 'none';
+          const frame = document.getElementById('staffFrame'); frame.style.display='block';
+        } else {
+          err.textContent = data.detail || 'Invalid credentials'; err.style.display='block';
+        }
+      } catch (err) { err.textContent = 'Network error'; err.style.display='block'; }
+    });
+  </script>
+</body>
+</html>

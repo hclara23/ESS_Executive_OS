@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WisCore Debug State</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;margin:0;padding:0}
+    header{background:#0b1220;color:#fff;padding:1rem 1.25rem}
+    main{padding:1rem}
+    pre{white-space:pre-wrap;word-break:break-word;background:#0f1720;color:#e6eef8;padding:1rem;border-radius:6px;overflow:auto;max-height:80vh}
+    button{background:#ef4444;color:#fff;border:none;padding:0.5rem 0.75rem;border-radius:6px;cursor:pointer}
+    .meta{margin-bottom:0.75rem}
+  </style>
+</head>
+<body>
+  <header>
+    <strong>WisCore Debug</strong>
+    <small style="margin-left:1rem;color:#cbd5e1">Local debug view of `wiscore` state</small>
+  </header>
+  <main>
+    <div class="meta"><button id="refresh">Refresh</button> <span id="status" style="margin-left:1rem"></span></div>
+    <pre id="out">Loading...</pre>
+  </main>
+  <script>
+    async function load(){
+      const out = document.getElementById('out');
+      const status = document.getElementById('status');
+      status.textContent = 'Fetching...';
+      try{
+        const res = await fetch('/wiscore/debug/state');
+        if(!res.ok){
+          out.textContent = await res.text();
+          status.textContent = 'Error ' + res.status;
+          return;
+        }
+        const data = await res.json();
+        out.textContent = JSON.stringify(data, null, 2);
+        status.textContent = 'OK';
+      }catch(e){
+        out.textContent = String(e);
+        status.textContent = 'Failed';
+      }
+    }
+    document.getElementById('refresh').addEventListener('click', load);
+    load();
+  </script>
+</body>
+</html>
