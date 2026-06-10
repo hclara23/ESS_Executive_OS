@@ -1,0 +1,12 @@
+venv
+.env
+.git
+node_modules
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+dist
+build
+/.venv

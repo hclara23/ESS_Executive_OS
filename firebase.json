@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "run": { "serviceId": "elio-api", "region": "us-central1" }
+      },
+      {
+        "source": "/wiscore/**",
+        "run": { "serviceId": "elio-api", "region": "us-central1" }
+      }
+    ]
+  }
+}
