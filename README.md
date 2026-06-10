@@ -154,3 +154,26 @@ python -m uvicorn server.app:app --reload
 ```
 
 If `ELIO_REDIS_URL` is set and `redis` (redis-py) is available in the environment, the server will use Redis for rate-limiting; otherwise it falls back to an in-memory limiter.
+
+## Disable Next.js telemetry (persistent opt-out)
+
+Next.js collects anonymous telemetry by default. To opt out persistently in development and CI, set the environment variable `NEXT_TELEMETRY_DISABLED=1` in your `.env` or CI configuration.
+
+Quick steps:
+
+- Copy the example env file and ensure the variable is set:
+
+```powershell
+copy .env.example .env
+# then edit .env to confirm NEXT_TELEMETRY_DISABLED=1
+```
+
+- Or set it in PowerShell for the current session:
+
+```powershell
+$env:NEXT_TELEMETRY_DISABLED = '1'
+```
+
+- For CI, add `NEXT_TELEMETRY_DISABLED=1` to your pipeline environment variables.
+
+You can still temporarily run `npx next telemetry enable`/`npx next telemetry disable` if you want to toggle locally, but the `NEXT_TELEMETRY_DISABLED` env variable is the recommended persistent opt-out.
